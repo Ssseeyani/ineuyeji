@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>🎨붓글씨 체험하기</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; }
+    canvas { border: 2px solid #ccc; cursor: crosshair; margin-top: 20px; }
+    .color-picker { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>🎨붓글씨 체험하기</h1>
+  <canvas id="canvas" width="500" height="700"></canvas>
+  <div class="color-picker">
+    <label for="color">색 선택:</label>
+    <input type="color" id="color" value="#ff0000">
+    <button id="saveBtn">🖼️ 저장하기</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const colorPicker = document.getElementById('color');
+    const saveBtn = document.getElementById('saveBtn');
+
+    let painting = false;
+
+    const image = new Image();
+    image.src = 'ineuyeji.png';
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    };
+
+    canvas.addEventListener('mousedown', () => painting = true);
+    canvas.addEventListener('mouseup', () => painting = false);
+    canvas.addEventListener('mouseleave', () => painting = false);
+    canvas.addEventListener('mousemove', draw);
+
+    function draw(e) {
+      if (!painting) return;
+      const x = e.offsetX;
+      const y = e.offsetY;
+      ctx.fillStyle = colorPicker.value;
+      ctx.beginPath();
+      ctx.arc(x, y, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    saveBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'colored-portrait.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  </script>
+</body>
+</html>
